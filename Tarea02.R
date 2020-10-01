@@ -21,7 +21,7 @@ c<- plot(x = BD_practicaR$IPC, y = BD_practicaR$TC)
 
 
 
-##A. Grafique y trace la línea de regresión 
+##A. Grafique y trace la lÃ­nea de regresiÃ³n 
 #insertar linea
 ggplot(data = BD_practicaR,
        mapping = aes(x = IPC,
@@ -69,7 +69,7 @@ summary(modelo2)
 
 
 
-#c. Indique si el ingreso per cápita tiene relacion positiva o negativa con la demanda de CP
+#c. Indique si el ingreso per cÃ¡pita tiene relacion positiva o negativa con la demanda de CP
 ##Hay una relacion positiva entre el ingreso per capita y la demanda CP
 ggplot(BD_practicaR,aes(IPC,CP))+
   geom_point()
@@ -82,3 +82,7 @@ ggplot(BD_practicaR,aes(IPC,CP))+
 #Cual es tu interpretacion del coeficiente de la pendiente
 #Como es positiva a mas ingreso mayor demanda de Telefonos celulares
 
+#libreria para multicolinealidad
+install.packages("faraway")
+library(faraway)
+vif(modelo1)
