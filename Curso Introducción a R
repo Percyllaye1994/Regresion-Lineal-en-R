@@ -157,3 +157,76 @@ table(CEP1$eval_econ_factor)
 CEP1$eval_econ_factor <- factor(CEP1$eval_econ_factor,labels=c("positiva","neutral","negativa"))
 table(CEP1$eval_econ_factor)
 
+################################tablas de frec, tendencia central y dispersion#################################
+
+##moda
+library(modeest)
+install.packages("modeest")
+mfv(CEP1$edad)
+
+#tablas de frecuencia
+table(CEP1$eval_econ_factor)
+
+tabla<-table(CEP1$eval_econ_factor)
+prop.table(tabla)
+prop.table(tabla)*100
+
+round((prop.table(tabla)*100),3)
+cumsum(tabla)
+
+#quartiles
+quantile(CEP1$satisfaccion_chilenos,prop=c(0.25,0.5,0.75),na.rm = TRUE)
+
+#min y maximo
+range(CEP1$edad,na.rm = TRUE)
+
+min(CEP1$edad,na.rm = TRUE)
+max(CEP1$edad,na.rm = TRUE)
+
+#rango
+max(CEP1$edad,na.rm = TRUE) - min(CEP1$edad,na.rm = TRUE)
+
+#varianza
+var(CEP1$satisfaccion_vida,na.rm = TRUE)
+
+##Desviacion estandar
+sd(CEP1$satisfaccion_chilenos,na.rm = TRUE)
+
+
+##GUARDAR TABLAS DE FRECUENCIA EN EXCEL#####
+
+f<- table(CEP1$eval_econ_factor)
+f_porc <- round((prop.table(tabla)*100),2)
+f_porc_acum<- cumsum(round((prop.table(tabla)*100),2))
+
+write.csv2(f,file = "tabla1.csv")
+write.csv2(f_porc,file = "tabla2.csv")
+write.csv2(f_porc_acum,file = "tabla3.csv")
+
+###satisfaccion de vida###
+
+#min,q1,media,mediana,moda,var,desv,q3,max
+summary(CEP1$satisfaccion_vida)
+
+#min
+min<-min(CEP1$satisfaccion_vida,na.rm = TRUE)
+
+#q1
+q1<-quantile(CEP1$satisfaccion_vida,prop=0.25,na.rm = TRUE)
+
+#media
+media<-mean(CEP1$satisfaccion_vida,na.rm = TRUE)
+#mediana
+mediana<- median(CEP1$satisfaccion_vida,na.rm = TRUE)
+#moda
+moda<-mfv(CEP1$satisfaccion_vida,na_rm = TRUE)
+#varianaza
+varianza<-var(CEP1$satisfaccion_vida,na.rm = TRUE)
+#desv
+desviacion<-sd(CEP1$satisfaccion_vida,na.rm = TRUE)
+
+#q3
+q3<-quantile(CEP1$satisfaccion_vida,prop=0.75,na.rm = TRUE)
+
+#max
+max<-max(CEP1$satisfaccion_vida,na.rm = TRUE)
