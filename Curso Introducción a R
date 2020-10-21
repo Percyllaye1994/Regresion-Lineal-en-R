@@ -230,3 +230,45 @@ q3<-quantile(CEP1$satisfaccion_vida,prop=0.75,na.rm = TRUE)
 
 #max
 max<-max(CEP1$satisfaccion_vida,na.rm = TRUE)
+
+
+##creamos un objeto
+
+descriptivos_sarvid<-as.numeric(c(min,q1,media,mediana,moda,varianza,desviacion,q3,max))
+
+nombres<-c("minimo","Q1","media","mediana","Moda","varianza","desviacion estandar","Q3","maximo")
+
+descriptivos <- as.data.frame(rbind(nombres,descriptivos_sarvid))
+
+write.csv2(descriptivos,file = "descriptivos.csv")
+
+#contruyendo graficos
+hist(CEP1$edad)
+
+#grafico de barras
+
+CEP1<-mutate(CEP1,
+             sexo_factor= factor(CEP1$sexo,
+                                 labels = c("hombre","mujer")))
+table(CEP1$sexo_factor)
+plot(CEP1$sexo_factor,
+     main="Grafico de barras",
+     xlab="Genero",
+     ylab="frecuancia")
+
+#grafico pastel
+
+porcentaje<- as.numeric(round(((prop.table(table(CEP1$eval_econ_factor)))*100),2))
+
+#otra forma
+#round(((prop.table(table(CEP1$eval_econ_factor)))*100),2)
+
+table(CEP1$eval_econ_factor)
+
+etiquetas<-c("positiva","neutra","negativa")
+etiquetas<- paste(etiquetas,porcentaje)
+etiquetas<paste(etiquetas,"%",sep="")
+
+pie(porcentaje,etiquetas,
+    main = "Grafico de pastel",
+    sub="Evaluacion economica")
