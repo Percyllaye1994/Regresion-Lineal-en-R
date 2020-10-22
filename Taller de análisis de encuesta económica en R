@@ -1,0 +1,83 @@
+library(haven)
+library(dplyr)
+library(openxlsx)
+library(foreign)
+library(stringr)
+
+##cargar base de datos
+file.choose()
+BV <- read.xlsx("E:\\IX Ciclo\\Curso Introduccion a R\\BD_viviendas (1).xlsx")
+
+##objeto ciudad en la cual se va a extraer los dos digitos del folioviv
+
+attach(BV)
+
+ciudad = str_sub(folioviv,1,2)
+ciudad
+##unir dos variables
+
+BD1<-cbind(ciudad,BV)
+
+BD1$ciudad<- as.character(BD1$ciudad)
+
+BD1$ciudad[BD1$ciudad=="01"] <- "Aguascalientes"
+
+BD1$ciudad[BD1$ciudad=="02"] <- "Baja California"
+BD1$ciudad[BD1$ciudad=="03"] <- "Baja California Sur"
+BD1$ciudad[BD1$ciudad=="04"] <- "Campeche"
+BD1$ciudad[BD1$ciudad=="05"] <- "Coahuila de Zaragoza"
+BD1$ciudad[BD1$ciudad=="06"] <- "Colima"
+BD1$ciudad[BD1$ciudad=="07"] <- "Chiapas"
+BD1$ciudad[BD1$ciudad=="08"] <- "Chihuahua"
+BD1$ciudad[BD1$ciudad=="09"] <- "Distrito Federal"
+BD1$ciudad[BD1$ciudad=="10"] <- "Durango"
+BD1$ciudad[BD1$ciudad=="11"] <- "Guanajuato"
+BD1$ciudad[BD1$ciudad=="12"] <- "Guerrero"
+BD1$ciudad[BD1$ciudad=="13"] <- "Hidalgo"
+BD1$ciudad[BD1$ciudad=="14"] <- "Jalisco"
+BD1$ciudad[BD1$ciudad=="15"] <- "México"
+BD1$ciudad[BD1$ciudad=="16"] <- "Michoacán de Ocampo"
+BD1$ciudad[BD1$ciudad=="17"] <- "Morelos"
+BD1$ciudad[BD1$ciudad=="18"] <- "Nayarit"
+BD1$ciudad[BD1$ciudad=="19"] <- "Nuevo León"
+BD1$ciudad[BD1$ciudad=="20"] <- "Oaxaca"
+BD1$ciudad[BD1$ciudad=="21"] <- "Puebla"
+BD1$ciudad[BD1$ciudad=="22"] <- "Querétaro"
+BD1$ciudad[BD1$ciudad=="23"] <- "Quintana Roo"
+BD1$ciudad[BD1$ciudad=="24"] <- "San Luis Potosí"
+BD1$ciudad[BD1$ciudad=="25"] <- "Sinaloa"
+BD1$ciudad[BD1$ciudad=="26"] <- "Sonora"
+BD1$ciudad[BD1$ciudad=="27"] <- "Tabasco"
+BD1$ciudad[BD1$ciudad=="28"] <- "Tamaulipas"
+BD1$ciudad[BD1$ciudad=="29"] <- "Tlaxcala"
+BD1$ciudad[BD1$ciudad=="30"] <- "Veracruz de Ignacio de la Llave"
+BD1$ciudad[BD1$ciudad=="31"] <- "Yucatán"
+BD1$ciudad[BD1$ciudad=="32"] <- "Zacatecas"
+
+
+table(BD1$ciudad)
+
+#vivienda con paredes q no son de concreto
+#mat_pared
+View(mat_pared)
+
+table(BD1$mat_pared)
+
+# 1<- material de desecho
+#2<- lamina de carton
+#3 <- lamina de adbesto o metalica
+#4 <- carrizo y bambu
+#5 <- embarro
+#6<-  madera 
+#7<- adove
+#8<- ladrillo, cemento
+
+BD1$mat_pared[BD1$mat_pared=="1"] <- 1
+BD1$mat_pared[BD1$mat_pared=="2"] <- 1
+BD1$mat_pared[BD1$mat_pared=="3"] <- 1
+BD1$mat_pared[BD1$mat_pared=="4"] <- 1 
+BD1$mat_pared[BD1$mat_pared=="5"] <- 1
+BD1$mat_pared[BD1$mat_pared=="6"] <- 1
+BD1$mat_pared[BD1$mat_pared=="7"] <- 1
+
+table(BD1$mat_pared)
