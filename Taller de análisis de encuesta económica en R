@@ -81,3 +81,83 @@ BD1$mat_pared[BD1$mat_pared=="6"] <- 1
 BD1$mat_pared[BD1$mat_pared=="7"] <- 1
 
 table(BD1$mat_pared)
+
+
+material_pared<-BD1 %>%
+  filter(mat_pared=="1") %>% 
+  group_by(ciudad) %>% 
+  summarise(mat_pared=sum(factor,na.rm = TRUE))
+
+###vivienda con techo q no son con concreto
+
+#01<- Material de desecho
+#02<- Lamina de carton
+#03<- LAmina metalica
+#04<- Lamina de asbesto
+#05<- Lamina de fibrocentro
+#06<- Lamina de fibrocentro
+#07<- Lamina de fibrocentro
+#08<- Lamina de fibrocentro
+#09<- Lamina de fibrocentro
+#10<- Lamina de fibrocentro
+
+
+#tipo de datos y conversion
+class(BD1$mat_techos)
+BD1$mat_techos<- as.numeric(BD1$mat_techos)
+
+
+BD1$mat_techos[BD1$mat_techos=="1"]<-1
+BD1$mat_techos[BD1$mat_techos=="2"]<-1
+BD1$mat_techos[BD1$mat_techos=="3"]<-1
+BD1$mat_techos[BD1$mat_techos=="4"]<-1
+BD1$mat_techos[BD1$mat_techos=="5"]<-1
+BD1$mat_techos[BD1$mat_techos=="6"]<-1
+BD1$mat_techos[BD1$mat_techos=="7"]<-1
+BD1$mat_techos[BD1$mat_techos=="8"]<-1
+BD1$mat_techos[BD1$mat_techos=="9"]<-1
+
+table(BD1$mat_techos)
+
+class(BD1$mat_techos)
+
+material_techos <- BD1 %>% 
+  filter(mat_techos=="1") %>% 
+  group_by(ciudad) %>% 
+  summarise(mat_techos=sum(factor,na.rm = TRUE))
+
+##viviendas con pisos de otros materiales
+
+table(BD1$mat_pisos)
+class(BD1$mat_pisos)
+BD1$mat_pisos<- as.numeric(BD1$mat_pisos)
+
+
+BD1$mat_pisos[BD1$mat_pisos=="2"]<-5
+BD1$mat_pisos[BD1$mat_pisos=="3"]<-5
+
+material_pisos <- BD1 %>% 
+  filter(mat_pisos=="5") %>% 
+  group_by(ciudad) %>% 
+  summarise(mat_pisos=sum(factor,na.rm = TRUE))
+
+##viviendas con tenencia propia
+
+#1<- es rentada
+#2<- es prestada
+#3<- es propia pero lo estan pagando
+#4<- es propia
+class(BD1$tenencia)
+BD1$tenencia
+
+BD1$tenencia<- as.numeric(BD1$tenencia)
+
+BD1$tenencia[BD1$tenencia=="3"]<-7
+BD1$tenencia[BD1$tenencia=="4"]<-7
+
+tenecia <- BD1 %>% 
+  filter(tenencia=="7") %>% 
+  group_by(ciudad) %>% 
+  summarise(tenencia=sum(factor,na.rm = TRUE))
+
+
