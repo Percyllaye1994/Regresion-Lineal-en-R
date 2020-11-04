@@ -1,0 +1,6 @@
+ install.packages ("TeachingSampling")
+ library(TeachingSampling)
+ N <- dim(encuesta)[1]
+ n <- 50
+ sam<-S.SI(N,n)
+ data <- encuesta[sam,]
