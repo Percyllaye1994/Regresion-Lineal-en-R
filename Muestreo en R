@@ -4,3 +4,6 @@
  n <- 50
  sam<-S.SI(N,n)
  data <- encuesta[sam,]
+
+
+#Fuente<- https://rdrr.io/cran/TeachingSampling/man/S.SI.html
