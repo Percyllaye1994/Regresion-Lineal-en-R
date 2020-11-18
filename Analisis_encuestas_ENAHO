@@ -1,0 +1,339 @@
+library(haven)
+library(sqldf)
+#install.packages('sqldf')
+#install.packages ("TeachingSampling")
+#install.packages("pastecs")
+#install.packages("boot")
+#install.packages("psych")
+#install.packages("ggplot2")
+#install.packages("PerformanceAnalytics")
+install.packages("Rmisc")
+library(Rmisc)
+library(ggplot2)
+library(psych)
+library(pastecs)
+library(dplyr)
+library(TeachingSampling)
+
+library(foreign)
+library(stringr)
+library(ggplot2)
+library(car)
+#file.choose()
+
+ REC44 <- read_sav("E:\\IX Ciclo\\Bioestadistica en R\\Trabajo final\\REC44.sav")
+ View(REC44)
+ REC44$ID1 <- NULL
+ REC44$CASEID <- NULL
+ REC44$HWIDX <- NULL
+ REC44$HW4<- NULL
+ 
+ REC44$HW5<- NULL
+ REC44$HW6<- NULL
+ REC44$HW7<- NULL
+ REC44$HW8<- NULL
+ REC44$HW9<- NULL
+ REC44$HW10<- NULL
+ REC44$HW11<- NULL
+ REC44$HW12<- NULL
+ 
+ REC44$HW51<- NULL
+ REC44$HW52<- NULL
+ REC44$HW58<- NULL
+ 
+ REC44$HW70<- NULL
+ REC44$HW71<- NULL
+ REC44$HW72<- NULL
+ REC44$HW73<- NULL
+
+ 
+ names(REC44)
+ View(REC44)
+attach(REC44)
+ str(REC44)
+ summary(REC44)
+ encuesta<- na.omit(REC44)
+ summary(encuesta)
+ encuesta$HW13<- NULL
+ encuesta$HW19<- NULL
+ encuesta$HW55<- NULL
+ attach(encuesta)
+ str(encuesta)
+ class(encuesta$HW2)
+ View(encuesta)
+
+ #convirtiendo algunas variables a decimales
+ encuesta <- encuesta %>%
+         mutate(HW2 = HW2 / 10)
+
+ encuesta <- encuesta %>%
+         mutate(HW3 = HW3 / 10)
+ 
+ encuesta <- encuesta %>%
+         mutate(HW53 = HW53 / 10)
+ 
+ encuesta <- encuesta %>%
+         mutate(HW56 = HW56 / 10)
+ 
+ summary(encuesta)
+ boxplot(encuesta3$HW2)
+ boxplot(encuesta$HW2)
+ boxplot(encuesta4$HW2)
+ boxplot(encuesta4$HW56)
+ hist(encuesta$HW2)
+ boxplot(encuesta)
+ IQR(encuesta$HW2)
+ #usando transact sql en R
+ sqldf("select count() from encuesta where HW57=4")
+ sql4<-sqldf("select HW1,HW2,HW53 from encuesta where HW2>30")
+ attach(encuesta)
+ data(encuesta)
+ class(encuesta$HW57)
+ class(encuesta$HW2)
+ as.factor(HW57)
+ table(encuesta$HW57)
+ 
+ #borrar atipicos
+ encuesta4 <- encuesta[encuesta$HW2 < 30, c( "HW1","HW2","HW3","HW15","HW16",
+                                             "HW17","HW18","HW53","HW56","HW57")]
+ names(encuesta4)
+ attach(encuesta4)
+ summary(encuesta4)
+ str(encuesta4)
+
+ 
+ 
+ #filtrar por estratos
+ #estrato 1
+ estrato1<-encuesta4 %>%
+         filter(HW57=="1")
+ 
+ #estrato 2
+ estrato2<-encuesta4 %>%
+         filter(HW57=="2")
+ 
+ #estrato 3
+ estrato3<-encuesta4 %>%
+         filter(HW57=="3")
+ 
+ #estrato 4
+ estrato4<-encuesta4 %>%
+         filter(HW57=="4")
+ 
+ 
+ #muestreo
+ #muestreo estrato 1
+ N <- dim(estrato1)[1]
+ n <- 7
+ sam<-S.SI(N,n)
+ estrato1_muestra <- estrato1[sam,]
+ 
+ #muestreo estrato 2
+ N <- dim(estrato2)[1]
+ n <- 597
+ sam<-S.SI(N,n)
+ estrato2_muestra <- estrato2[sam,]
+ 
+ #muestreo estrato 3
+ N <- dim(estrato3)[1]
+ n <- 1432
+ sam<-S.SI(N,n)
+ estrato3_muestra <- estrato3[sam,]
+ 
+ #muestreo estrato 4
+ N <- dim(estrato4)[1]
+ n <- 4324
+ sam<-S.SI(N,n)
+ estrato4_muestra <- estrato4[sam,]
+ ####uniendo los estratos####
+ #Unimos los DF con los datos de los pesos del Testigo con los del Tratado. rbind = unir agregando filas, 
+ #cuando sabemos que los nombres de las columnas (variables),
+ #son iguales y est�n en el mismo orden.
+ data_muestra = rbind(estrato1_muestra,estrato2_muestra,estrato3_muestra,estrato4_muestra)
+ View (data_muestra)
+ attach(data_muestra)
+ detach(data_muestra)
+ str(data_muestra)
+ head(data_muestra)
+ as.integer(data_muestra$HW2)
+ ##hasta aqui la limpieza y preparacion de data
+ 
+
+summary(data_muestra$HW2)
+
+describe(data_muestra)
+
+options(scipen=100)
+options(digits=2)
+stat.desc(data_muestra$HW2)
+
+stat.desc(data_muestra, basic=F)
+
+#descriptivos
+
+hist(data_muestra$HW2)
+summary(data_muestra)
+
+#agrupamos meses en a�os
+data_muestra$HW58 <- factor(recode(data_muestra$HW1, "6:11=1; 12:23=2; 24:35=3; 36:47=4; 48:59=5"),labels = c("6-11 meses","12-23 meses","24-35 meses","36-47 meses","48-59 meses"))
+table(data_muestra$HW58)
+plot(data_muestra$HW58)
+attach(data_muestra)
+
+# tablas y graficos univariados
+
+#histograma de edad
+ggplot(data_muestra, aes(x = HW1)) +
+        geom_histogram(binwidth = 0.6,fill="steelblue") +
+        scale_x_continuous("Edad (meses cumplidos)") + 
+        scale_y_continuous("Frecuencia") +
+        labs(title = "Histograma de Edad en meses")
+
+#library(ggplot2)
+#Gr�fico de barras con edad agrupada
+ggplot(data_muestra, aes(x = HW58)) +
+        geom_bar(width = 0.6,  fill="steelblue") +
+        scale_x_discrete("Edad") +     # configuraci�n eje X (etiqueta del eje)
+        scale_y_continuous("Frecuencia") +
+        labs(title = "Grupo de edad en meses")+ coord_flip()
+
+win.graph()
+par(mfrow=c(1,2)) 
+#grafico de cajas
+boxplot(data_muestra$HW2,main = "Gr�fico de Cajas del Peso")
+boxplot(data_muestra$HW3,main = "Gr�fico de Cajas de la talla")
+
+
+
+#histograma de peso
+hist1<-ggplot(data_muestra, aes(x = HW2)) +
+        geom_histogram(binwidth = 0.6,fill="steelblue") +
+        scale_x_continuous("Peso en Kg") + 
+        scale_y_continuous("Frecuencia") +
+        labs(title = "Histograma de Peso")
+
+#histograma de la talla en centimetros
+hist2<-ggplot(data_muestra, aes(x = HW3)) +
+        geom_histogram(binwidth = 0.6,fill="steelblue") +
+        scale_x_continuous("Talla en centimetros") + 
+        scale_y_continuous("Frecuencia") +
+        labs(title = "Histograma de la talla")
+
+#Gr�fico de barras de posicion del ni�o al medir
+
+data_muestra$HW15<-factor(data_muestra$HW15,labels = c("acostado","parado"))#nombrar etiqueta de variable
+table(data_muestra$HW15) 
+
+ggplot(data_muestra, aes(x = HW15,fill=HW15)) +
+        geom_bar(width = 0.6) +
+        scale_x_discrete("Posicion del ni�o al medir") +     # configuraci�n eje X (etiqueta del eje)
+        scale_y_continuous("Frecuencia") +
+        labs(title = "Gr�fico de barras de posicion del ni�o al medir")+ theme_minimal()
+
+#nombrar etiquetas de del factor mes de la medicion
+data_muestra$HW18<-factor(data_muestra$HW18,labels = c("Enero","Febrero","Marzo","Abril","Mayo",
+                                                       "junio",
+                                                       "julio",
+                                                       "agosto",
+                                                       "septiembre",
+                                                       "octubre",
+                                                       "noviembre",
+                                                       "diciembre"))
+                                                       
+table(data_muestra$HW18)
+meses_medicion<-table(data_muestra$HW18)
+View(meses_medicion) 
+
+#Gr�fico para comparar el grupo de edad con la posicion
+ggplot( data_muestra, aes( x = HW58, fill = HW15 ) ) +
+        geom_bar( position = "dodge" ) +
+        scale_x_discrete("Grupo de edad") +     # configuraci�n eje X (etiqueta del eje)
+        scale_y_continuous("Frecuencia") +
+        labs(title = "Gr�fico para comparar el grupo de edad con la posicion")+
+        theme_minimal()
+
+
+#Gr�fico para comparar el peso con la posicion
+ggplot(data_muestra, aes(HW15, HW2)) + geom_boxplot()+
+        scale_x_discrete("Posicion de la medida") +     # configuraci�n eje X (etiqueta del eje)
+        scale_y_continuous("Peso(kg)") +
+        labs(title = "Gr�fico para comparar el peso con la posicion")
+
+
+
+#Gr�fico para comparar la talla por el nivel de anemia
+table(data_muestra$HW57)
+data_muestra$HW57<-factor(data_muestra$HW57,labels = c("Grave","Moderado","Leve","Sin anemia"))
+
+ggplot(data_muestra, aes(HW57, HW3)) + geom_boxplot()+
+        scale_x_discrete("Nivel de anemia") +     # configuraci�n eje X (etiqueta del eje)
+        scale_y_continuous("Talla(cm)") +
+        labs(title = "Gr�fico para comparar la talla por el nivel de anemia")
+
+
+#grafico de barras de errores para la media
+sql5<-sqldf("select HW58,STDEV(HW2) as sd,AVG(HW2) as media from data_muestra group by HW58")
+
+sql5
+
+#grafico de errores 
+ggplot(sql5, aes(x = media, y = HW58, xmin = media-sd, xmax = media+sd)) + 
+        scale_y_discrete("EDAD POR GRUPOS") +
+        geom_point() +
+        geom_errorbarh(height=.2)
+
+
+##chi-cuadrado
+cuadro2<-table(data_muestra$HW57, data_muestra$HW15)
+cuadro2
+chisq.test(cuadro2)
+mosaicplot(cuadro2, color=TRUE, main="Plot de mosaico")
+
+prop.table(cuadro2)
+
+barplot(cuadro2,  legend = rownames(cuadro2), beside=F, axis.lty = 1)
+
+
+#creamos la variable dicotomica HW57_2
+dominio.t <- as.numeric(data_muestra$HW57)
+table(dominio.t)
+
+HW57_2 <- vector() # Se crea un vector vac�o
+HW57_2[dominio.t == 4] <- "Sin anemia"
+HW57_2[dominio.t < 4] <- "Con anemia"
+HW57_2 <- as.factor(HW57_2)
+table(HW57_2)
+
+#insertamos la nueva variable en data_muestra
+data_muestra$HW57_2<-HW57_2
+table(data_muestra$HW57)
+
+table(data_muestra$HW57_2)
+
+cuadro3<-table(data_muestra$HW57_2,data_muestra$HW15)
+
+#sensibilidad y especificidad
+library(epiR)
+epi.2by2(cuadro3)
+
+#correlacion y regresion
+
+library(PerformanceAnalytics)
+probar_corre<- data.frame(data_muestra$HW1,data_muestra$HW2 ,data_muestra$HW3,data_muestra$HW53)
+chart.Correlation(probar_corre)
+pairs(data_muestra)
+
+modelo3 <- lm(HW3 ~ HW1+HW53,data=data_muestra)
+summary(modelo3)
+
+anova(modelo3)
+library(MASS)
+library(lmtest)
+residuos_1 <- stdres(modelo3)
+View(residuos_1)
+plot(residuos_1)
+
+resettest(modelo3)
+
+par(mfrow = c(2, 2))
+plot(modelo3)
